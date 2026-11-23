@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123b5d">
+<link rel="manifest" href="manifest.webmanifest">
+<title>E-Feuille de Marche GTS</title>
+<style>
+:root{--navy:#123b5d;--blue:#176b9b;--bg:#f3f6f8;--line:#d8e0e6;--ink:#18232d;--muted:#647481;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:var(--navy);color:white;padding:18px 16px 16px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0002}
+header .sub{font-size:12px;opacity:.8}h1{font-size:20px;margin:0 0 4px}.wrap{max-width:980px;margin:auto;padding:14px 12px 40px}
+nav{display:flex;gap:7px;overflow:auto;padding:10px 0 14px}nav button{white-space:nowrap;border:1px solid var(--line);background:white;color:var(--navy);border-radius:22px;padding:9px 13px;font-weight:650}
+nav button.active{background:var(--navy);color:white;border-color:var(--navy)}
+.card{background:white;border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:13px;box-shadow:0 1px 3px #142b3c0a}
+h2{font-size:17px;margin:0 0 12px;color:var(--navy)}h3{font-size:14px;margin:12px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+label{display:block;font-size:12px;color:var(--muted);font-weight:650;margin-bottom:4px}
+input,select,textarea{width:100%;min-width:0;border:1px solid #cbd5dd;border-radius:9px;padding:10px 9px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid #8fc5e4;border-color:var(--blue)}
+button{cursor:pointer}.primary,.secondary,.danger{border:0;border-radius:10px;padding:11px 14px;font-weight:700}
+.primary{background:var(--blue);color:white}.secondary{background:#eaf1f5;color:var(--navy)}.danger{background:#fff0ef;color:#a42d25}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.muted{color:var(--muted);font-size:12px}.station{border:1px solid var(--line);border-radius:11px;padding:11px;margin:10px 0}
+.station-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px;font-weight:700;color:var(--navy)}
+.result{background:#eaf5fa;border-radius:10px;padding:12px;margin-top:10px}.result strong{font-size:22px;color:var(--navy)}
+table{border-collapse:collapse;width:100%;font-size:12px}th,td{border:1px solid var(--line);padding:6px;text-align:left}th{background:#edf3f6;color:var(--navy)}
+.table-scroll{overflow:auto} .hidden{display:none!important}
+.code-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.code-item{background:#f7f9fa;border:1px solid var(--line);padding:9px;border-radius:8px;font-size:12px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:18px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){.grid.three{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:10px 9px 30px}}
+@media print{header,nav,.no-print,footer{display:none!important}body{background:white}.wrap{max-width:none;padding:0}.card{box-shadow:none;break-inside:avoid;border:1px solid #aaa}.hidden{display:block!important}input,select,textarea{border:0;padding:2px}.station{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><h1>E-Feuille de Marche GTS</h1><div class="sub">Outil numérique individuel du chef de train · Version 1</div></header>
+<div class="wrap">
+<nav class="no-print">
+<button class="active" data-tab="sheet">Feuille de marche</button>
+<button data-tab="calculator">Calculatrice</button>
+<button data-tab="loss">Temps perdus</button>
+<button data-tab="saved">Mes feuilles</button>
+</nav>
+
+<section id="sheet" class="tab">
+<div class="card">
+<h2>Identification du train</h2>
+<div class="grid">
+<div><label>Type de train</label><select id="trainType"><option value="">Sélectionner</option><option>1 - Autorail</option><option>2 - Train léger</option><option>3 - Voyageur</option><option>4 - Mixte</option><option>5 - Marchand</option><option>6 - Phosphates</option><option>7 - Service</option><option>8 - Secours</option><option>9 - HLP</option></select></div>
+<div><label>Code</label><input id="trainCode" placeholder="Code"></div>
+<div><label>Numéro du train</label><input id="trainNumber" placeholder="Ex. TLMB4"></div>
+<div><label>Date</label><input id="date" type="date"></div>
+<div><label>Parcours de</label><input id="from" placeholder="Gare de départ"></div>
+<div><label>À</label><input id="to" placeholder="Gare d'arrivée"></div>
+<div><label>Numéro(s) de machine(s)</label><input id="machines"></div>
+<div><label>Conducteur – nom</label><input id="driver"></div>
+<div><label>Conducteur – matricule</label><input id="driverId"></div>
+<div><label>Aide-conducteur</label><input id="assistant"></div>
+<div><label>Chef de train – nom</label><input id="chief"></div>
+<div><label>Chef de train – matricule</label><input id="chiefId"></div>
+<div><label>Serre-freins</label><input id="brakeman"></div>
+</div>
+</div>
+<div class="card">
+<h2>Parcours et horaires par gare</h2>
+<p class="muted">Saisir les horaires prévus et réels. Les retards sont calculés automatiquement lorsqu'une heure prévue et une heure réelle sont renseignées.</p>
+<div id="stations"></div>
+<div class="actions no-print"><button class="secondary" id="addStation">+ Ajouter une gare</button></div>
+</div>
+<div class="card">
+<h2>Observations générales</h2><textarea id="generalNotes" rows="3" placeholder="Observations..."></textarea>
+<div class="actions no-print"><button class="primary" id="saveSheet">Enregistrer cette feuille</button><button class="secondary" onclick="window.print()">Imprimer / PDF</button></div>
+<p class="muted">Les données sont conservées sur ce téléphone. Pour garder une copie ailleurs, exportez le PDF.</p>
+</div>
+</section>
+
+<section id="calculator" class="tab hidden">
+<div class="card">
+<h2>Calculatrice d'horaires</h2>
+<div class="grid">
+<div><label>Heure de départ</label><input id="calcStart" type="time" value="08:15"></div>
+<div><label>Durée du parcours (HH:MM)</label><input id="calcDuration" type="text" value="01:35" placeholder="01:35"></div>
+<div><label>Temps d'arrêt (HH:MM)</label><input id="calcStop" type="text" value="00:10" placeholder="00:10"></div>
+</div>
+<div class="result">Heure d'arrivée calculée<br><strong id="calcArrival">09:50</strong></div>
+<div class="result">Heure de départ suivant<br><strong id="calcNext">10:00</strong></div>
+<p class="muted">Calcul horaire indicatif : départ + durée = arrivée ; arrivée + arrêt = départ suivant. Vérifier les horaires officiels et les consignes de circulation.</p>
+</div>
+<div class="card">
+<h2>Calcul d'un écart horaire</h2>
+<div class="grid">
+<div><label>Heure prévue</label><input id="planned" type="time"></div>
+<div><label>Heure réelle</label><input id="actual" type="time"></div>
+</div>
+<div class="result" id="delta">Renseigner les deux heures pour calculer l'écart.</div>
+</div>
+</section>
+
+<section id="loss" class="tab hidden">
+<div class="card">
+<h2>Rapport du chef de train – Temps perdu</h2>
+<div class="grid">
+<div><label>Code A – Cause</label><select id="lossA"><option value="">Choisir</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9 - Divers</option></select></div>
+<div><label>Code B – Nature</label><select id="lossB"><option value="">Choisir</option><option value="0">0 - Mouvement</option><option value="1">1 - Gares</option><option value="2">2 - DMR</option><option value="3">3 - DIF</option><option value="9">9 - Attente enquête</option></select></div>
+<div><label>Temps perdu (HH:MM)</label><input id="lossTime" placeholder="00:15"></div>
+<div><label>Gare / lieu</label><input id="lossPlace"></div>
+</div>
+<label>Précisions / observations</label><textarea id="lossNotes" rows="2"></textarea>
+<div class="actions no-print"><button class="primary" id="addLoss">Ajouter au rapport</button></div>
+<div id="lossList" class="table-scroll"></div>
+</div>
+<div class="card">
+<h2>Nomenclature des codes B</h2>
+<div class="code-grid">
+<div class="code-item"><b>0 – Mouvement</b><br>1 Correspondance train<br>2 Correspondance rame<br>3 Correspondance machine<br>4 Garage<br>5 Croisement<br>6 Cantonnement<br>9 Divers</div>
+<div class="code-item"><b>1 – Gares</b><br>1 Formation avant départ<br>2 Service voyageurs<br>3 Manutention<br>4 Manœuvres<br>5 Attente CTR<br>6 Attente serre-frein<br>7 Préparation itinéraire<br>9 Divers</div>
+<div class="code-item"><b>2 – DMR</b><br>1 STM<br>2 Approvisionnement<br>3 Soins machine<br>4 Soins matériel remorqué<br>5 Attente MEC<br>6 Marche<br>7 Freinage<br>8 Rupture d'attelage<br>9 Divers</div>
+<div class="code-item"><b>3 – DIF</b><br>1 Ralentissement travaux<br>2 Rail cassé<br>3 Submersion par les eaux<br>4 Dégagement tardif<br>5 Flambage<br>9 Divers</div>
+<div class="code-item"><b>9 – Attente enquête</b><br>1 Tamponnement<br>2 Déraillement ligne<br>3 Collision PN<br>4 Collision autre<br>5 Accident de personne<br>9 Divers</div>
+</div>
+<p class="muted">Les codes et libellés ci-dessus reprennent le tableau de la feuille fournie. Le code A est saisi séparément, comme sur le formulaire d'origine.</p>
+</div>
+</section>
+
+<section id="saved" class="tab hidden">
+<div class="card"><h2>Mes feuilles enregistrées</h2><div id="savedList"></div><p class="muted">Les feuilles restent sur le téléphone utilisé pour les créer. Elles ne sont pas synchronisées entre appareils.</p></div>
+</section>
+<footer>Prototype V1 · E-Feuille de Marche GTS · Outil d'aide à la saisie, non substitut aux documents et consignes officiels.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let losses=[];
+function mins(t){if(!/^\\d{1,2}:\\d{2}$/.test(t||''))return null;let [h,m]=t.split(':').map(Number);return h*60+m}
+function clock(n){n=((n%1440)+1440)%1440;return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
+function duration(t){let n=mins(t);return n===null?null:n}
+function diff(a,b){let x=mins(a),y=mins(b);if(x===null||y===null)return null;let d=y-x;if(d<0)d+=1440;return d}
+function fmt(n){return `${Math.floor(n/60)} h ${String(n%60).padStart(2,'0')} min`}
+function updateCalc(){let s=$('calcStart').value,d=duration($('calcDuration').value),p=duration($('calcStop').value),m=mins(s);if(m===null||d===null||p===null){$('calcArrival').textContent='—';$('calcNext').textContent='—';return}$('calcArrival').textContent=clock(m+d);$('calcNext').textContent=clock(m+d+p)}
+['calcStart','calcDuration','calcStop'].forEach(id=>$(id).addEventListener('input',updateCalc));
+['planned','actual'].forEach(id=>$(id).addEventListener('input',()=>{let d=diff($('planned').value,$('actual').value);$('delta').textContent=d===null?'Renseigner les deux heures pour calculer l’écart.':(d===0?'Aucun écart.':`Écart : ${fmt(d)} de retard (calcul circulaire sur 24 h).`)}));
+let stationCount=0;
+function addStation(data={}){stationCount++;let n=stationCount,div=document.createElement('div');div.className='station';div.innerHTML=`
+<div class="station-head"><span>Gare ${n}</span><button class="danger no-print remove">Supprimer</button></div>
+<div class="grid">
+<div><label>Libellé de la gare</label><input data-k="name" placeholder="Nom de la gare" value="${esc(data.name||'')}"></div>
+<div><label>Code gare</label><input data-k="code" value="${esc(data.code||'')}"></div>
+<div><label>Arrivée prévue</label><input data-k="pa" type="time" value="${data.pa||''}"></div>
+<div><label>Arrivée réelle</label><input data-k="aa" type="time" value="${data.aa||''}"></div>
+<div><label>Départ prévu</label><input data-k="pd" type="time" value="${data.pd||''}"></div>
+<div><label>Départ réel</label><input data-k="ad" type="time" value="${data.ad||''}"></div>
+<div><label>Temps perdu / gagné (HH:MM)</label><input data-k="lost" placeholder="00:00" value="${esc(data.lost||'')}"></div>
+<div><label>Croisement – prévus</label><input data-k="crossP" value="${esc(data.crossP||'')}"></div>
+<div><label>Croisement – effectués</label><input data-k="crossA" value="${esc(data.crossA||'')}"></div>
+<div><label>Effectifs prévus</label><input data-k="staff" value="${esc(data.staff||'')}"></div>
+<div><label>Observations</label><input data-k="notes" value="${esc(data.notes||'')}"></div>
+</div><div class="muted calc-status"></div>`;
+div.querySelector('.remove').onclick=()=>div.remove();
+const refresh=()=>{let pa=div.querySelector('[data-k=pa]').value,aa=div.querySelector('[data-k=aa]').value,pd=div.querySelector('[data-k=pd]').value,ad=div.querySelector('[data-k=ad]').value;let a=diff(pa,aa),d=diff(pd,ad);div.querySelector('.calc-status').textContent=[a===null?'':`Retard arrivée : ${fmt(a)}`,d===null?'':`Retard départ : ${fmt(d)}`].filter(Boolean).join(' · ')};
+div.querySelectorAll('input').forEach(i=>i.addEventListener('input',refresh));$('stations').appendChild(div);refresh()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('addStation').onclick=()=>addStation();
+addStation({name:'Gare de départ'});
+addStation({name:'Gare intermédiaire'});
+addStation({name:'Gare d’arrivée'});
+$('date').value=new Date().toISOString().slice(0,10);
+function collect(){let obj={};document.querySelectorAll('#sheet input,#sheet select,#sheet textarea').forEach(e=>obj[e.id]=e.value);obj.stations=[...$('stations').children].map(div=>{let o={};div.querySelectorAll('[data-k]').forEach(e=>o[e.dataset.k]=e.value);return o});obj.losses=losses;return obj}
+function fill(o){Object.keys(o).forEach(k=>{let e=$(k);if(e&&typeof o[k]==='string')e.value=o[k]});$('stations').innerHTML='';stationCount=0;(o.stations||[]).forEach(addStation);losses=o.losses||[];renderLosses()}
+$('saveSheet').onclick=()=>{let arr=JSON.parse(localStorage.getItem('gtsSheets')||'[]');let o=collect();o.id=Date.now();o.label=(o.trainNumber||'Train sans numéro')+' – '+(o.date||'Sans date');arr.unshift(o);localStorage.setItem('gtsSheets',JSON.stringify(arr));alert('Feuille enregistrée sur ce téléphone.');renderSaved()};
+function renderSaved(){let arr=JSON.parse(localStorage.getItem('gtsSheets')||'[]');$('savedList').innerHTML=arr.length?arr.map(o=>`<div class="station"><b>${esc(o.label)}</b><div class="muted">${esc(o.from||'')} → ${esc(o.to||'')}</div><div class="actions"><button class="secondary" data-open="${o.id}">Ouvrir</button><button class="danger" data-del="${o.id}">Supprimer</button></div></div>`).join(''):'Aucune feuille enregistrée.';$('savedList').querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{let o=arr.find(x=>x.id==b.dataset.open);fill(o);showTab('sheet')});$('savedList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{localStorage.setItem('gtsSheets',JSON.stringify(arr.filter(x=>x.id!=b.dataset.del)));renderSaved()})}
+$('addLoss').onclick=()=>{let a=$('lossA').value,b=$('lossB').value,t=$('lossTime').value;if(!a||!b||!t){alert('Veuillez renseigner le code A, le code B et le temps perdu.');return}losses.push({a,b,t,place:$('lossPlace').value,notes:$('lossNotes').value});$('lossTime').value='';$('lossPlace').value='';$('lossNotes').value='';renderLosses()};
+function renderLosses(){$('lossList').innerHTML=losses.length?'<table><thead><tr><th>Code A</th><th>Code B</th><th>Temps</th><th>Lieu</th><th>Observations</th></tr></thead><tbody>'+losses.map(x=>`<tr><td>${esc(x.a)}</td><td>${esc(x.b)}</td><td>${esc(x.t)}</td><td>${esc(x.place)}</td><td>${esc(x.notes)}</td></tr>`).join('')+'</tbody></table>':'<p class="muted">Aucun temps perdu saisi.</p>'}
+function showTab(id){document.querySelectorAll('.tab').forEach(s=>s.classList.toggle('hidden',s.id!==id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));if(id==='saved')renderSaved()}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+renderSaved();updateCalc();renderLosses();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
